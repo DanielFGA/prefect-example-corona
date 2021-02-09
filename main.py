@@ -26,13 +26,13 @@ class StringConverter(dict):
         return str
 
 
-@task(name='extract corona cases into df')
+@task(name='extract corona cases')
 def extract_corona_cases() -> pd.DataFrame:
     corona_cases_df = pd.read_csv(CORONA_CASES_PATH, sep=';', converters=StringConverter())
     return corona_cases_df
 
 
-@task(name='extract corona tests into df')
+@task(name='extract corona tests')
 def extract_corona_tests() -> pd.DataFrame:
     corona_tests_df = pd.read_csv(CORONA_TESTS_PATH, sep=';', converters=StringConverter(), usecols=['Kalenderwoche', 'Anzahl Testungen'])
     return corona_tests_df[:-1]  # we dont need the last summary line
@@ -81,13 +81,13 @@ def create_database(database_name: str) -> sqlite3.Connection:
     return conn
 
 
-@task(name='create table from df')
+@task(name='create table')
 def create_table_from_df(df: pd.DataFrame, df_name: str, connection: sqlite3.Connection):
     connection.execute('DROP table IF EXISTS {}'.format(df_name))
     df.to_sql(name=df_name, con=connection)
 
 
-@task(name='visualize df')
+@task(name='visualize')
 def visualize_df(df: pd.DataFrame,
                         df_name: str,
                         x_axis: str,
@@ -111,7 +111,7 @@ with Flow('Corona cases in relation with tests flow') as flow:
     create_table_from_df(corona_tests_df_transformed, 'corona_tests', connection)
     create_table_from_df(unite_corona_cases_and_tests_df, 'unite_corona_cases_and_tests', connection)
 
-    visualize_df(unite_corona_cases_and_tests_df, 'unite_corona_cases_and_tests',
+    visualize_df(unite_corona_cases_and_tests_df, 'Corona cases with relation to tests',
                         x_axis='Kalenderwoche',
                         y_axis=["Gemeldete Infektionen", "Hospitalisierte Fälle", "Todesfälle", "Anzahl Testungen"]
                         )
