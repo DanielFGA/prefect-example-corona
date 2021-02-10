@@ -1,13 +1,12 @@
 import os
 
-from prefect.executors import LocalDaskExecutor
+from prefect.executors import DaskExecutor
 
 from config import GRAPHVIZ_PATH
 from corona_prefect_example import flow
 
 os.environ["PATH"] += os.pathsep + GRAPHVIZ_PATH
 
-flow.executor = LocalDaskExecutor()
+flow.executor = DaskExecutor()
 
-flow.run()
-flow.visualize(filename='prefact_flow', format='png')
+flow.register(project_name="corona_data")
