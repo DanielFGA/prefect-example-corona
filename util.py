@@ -16,4 +16,4 @@ def remove_dot(x):
 
 
 def sleep_random():
-    sleep(random.randint(1, 10))
+    sleep(random.randint(1, 20))

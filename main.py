@@ -9,4 +9,4 @@ os.environ["PATH"] += os.pathsep + GRAPHVIZ_PATH
 
 flow.executor = DaskExecutor()
 
-flow.register(project_name="corona_data")
+flow.register(project_name="example")
